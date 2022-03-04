@@ -1,0 +1,227 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <cs50.h>
+#define START_1800 3
+
+// calculates amount of leap years
+int check_leap_year(year)
+{
+    int leaps = 0;
+    for (int x = 1804; x < year; x = x + 4)
+    {
+        leaps++;
+    }
+    // 1900 is not leapyear
+    if (year >= 1900)
+    {
+        leaps = leaps - 1;
+    }
+    return leaps;
+}
+
+int count_number_of_days_from_1_Jan_until_month(int month)
+{
+    if (month == 2)
+    {
+        return 32;
+    }
+    else if (month == 3)
+    {
+        return 59;
+    }
+    else if (month == 4)
+    {
+        return 90;
+    }
+    else if (month == 5)
+    {
+        return 120;
+    }
+    else if (month == 6)
+    {
+        return 151;
+    }
+    else if (month == 7)
+    {
+        return 181;
+    }
+    else if (month == 8)
+    {
+        return 212;
+    }
+    else if (month == 9)
+    {
+        return 243;
+    }
+    else if (month == 10)
+    {
+        return 273;
+    }
+    else if (month == 11)
+    {
+        return 304;
+    }
+    else if (month == 12)
+    {
+        return 335;
+    }
+    else return 1;
+}
+
+int count_number_of_days_from_1800_until_year(int year)
+{
+    int check_year = year - 1800;
+    int check_days = check_year * 365;
+    return check_days;
+}
+
+int count_number_of_days_from_1800(int month, int year)
+{
+    int days_1800 = count_number_of_days_from_1800_until_year(year);
+    int days_till_month = count_number_of_days_from_1_Jan_until_month(month);
+    int leaps = check_leap_year(year);
+    int days = days_1800 + days_till_month + leaps;
+    return days;
+}
+
+int get_first_day_of_month(int month, int year)
+{
+
+    int number_of_days_from_1800 = count_number_of_days_from_1800(month, year);
+    return (number_of_days_from_1800 + START_1800) % 7;
+}
+
+void display_header(int month, int year)
+{
+    // searches for month
+    if (month == 1)
+    {
+        printf("          Jan");
+    }
+    else if (month == 2)
+    {
+        printf("          Feb");
+    }
+    else if (month == 3)
+    {
+        printf("          Mar");
+    }
+    else if (month == 4)
+    {
+        printf("          Apr");
+    }
+    else if (month == 5)
+    {
+        printf("          May");
+        // return (31);
+    }
+    else if (month == 6)
+    {
+        printf("          Jun");
+    }
+    else if (month == 7)
+    {
+        printf("          Jul");
+    }
+    else if (month == 8)
+    {
+        printf("          Aug");
+    }
+    else if (month == 9)
+    {
+        printf("          Sep");
+    }
+    else if (month == 10)
+    {
+        printf("          Okt");
+    }
+    else if (month == 11)
+    {
+        printf("          Nov");
+        //return(30);
+    }
+    else if (month == 12)
+    {
+        printf("          Dec ");
+    }
+    printf(" %d\n",  year);
+    printf("---------------------------");
+    printf("\nSun Mon Tue Wed Thu Fri Sat\n");
+}
+
+
+int get_number_of_dates_in_month(int month, int year)
+{
+    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+    {
+        return 31;
+    }
+    else if (month == 2)
+    {
+        return 28;
+    }
+    else
+    {
+        return 30;
+    }
+}
+
+void display_grid(int month, int year)
+{
+    int first_day = get_first_day_of_month(month, year);
+    int days = get_number_of_dates_in_month(month, year);
+    // checkt de off-day
+    printf("%i", first_day);
+    for (int j = 1; j < first_day; j ++)
+    {
+        printf("    ");
+    }
+
+    for(int i = 1; i <= days; i++)
+    {
+        if (i  > 9)
+        {
+            printf(" %d", i);
+            printf(" ");
+        }
+        else
+        {
+            printf("  %d", i );
+            printf(" ");
+        }
+
+        double check = (i + first_day - 1) / 7.0;
+        if (check == 1.0 || check == 2.0 || check == 3.0 || check == 4.0)
+        {
+            printf("\n");
+        }
+    }
+}
+
+void display_calender(int month, int year)
+{
+    display_header(month, year);
+    display_grid(month, year);
+}
+
+
+int main(int argc, string argv[])
+{
+
+    if (argc == 3)
+    {
+        int year = atoi(argv[1]);
+        int month = atoi(argv[2]);
+        display_calender(month, year);
+        printf("\n");
+    }
+
+
+    else
+    {
+        printf("Usage: ./calendar year month");
+        return 1;
+    }
+}
